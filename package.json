@@ -1,5 +1,7 @@
 {
   "name": "lunemodels",
   "version": "0.1.0",
-  "main": "index.js"
+  "main": "index.js",
+  "type": "module",
+  "types": "index.d.ts"
 }
