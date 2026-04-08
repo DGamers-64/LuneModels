@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-//  LuneModels — Type Definitions
+//  LuneSchema — Type Definitions
 // ─────────────────────────────────────────────────────────────────────────────
 
 /**
@@ -22,7 +22,7 @@ export type CustomValidator<T> = (value: T) => ValidationResult;
 
 /**
  * Validador base para tipos primitivos (`string` y `number`).
- * Se obtiene a través de `LuneModels.string()` o `LuneModels.number()`.
+ * Se obtiene a través de `LuneSchema.string()` o `LuneSchema.number()`.
  */
 export interface PrimitiveValidator<T> {
   /** Tipo interno del validador (`"string"` | `"number"`). */
@@ -52,11 +52,11 @@ export interface PrimitiveValidator<T> {
 
 /**
  * Validador para valores de tipo `string`.
- * Se obtiene a través de `LuneModels.string()`.
+ * Se obtiene a través de `LuneSchema.string()`.
  *
  * @example
  * ```js
- * const v = LuneModels.string().required().minLength(3).maxLength(50);
+ * const v = LuneSchema.string().required().minLength(3).maxLength(50);
  * v.validate("Hola"); // true
  * v.validate("Hi");   // "Mínimo 3 caracteres"
  * ```
@@ -81,11 +81,11 @@ export interface StringValidator extends PrimitiveValidator<string> {
 
 /**
  * Validador para valores de tipo `number`.
- * Se obtiene a través de `LuneModels.number()`.
+ * Se obtiene a través de `LuneSchema.number()`.
  *
  * @example
  * ```js
- * const v = LuneModels.number().required().min(0).max(100);
+ * const v = LuneSchema.number().required().min(0).max(100);
  * v.validate(50);  // true
  * v.validate(150); // "El valor máximo es 100"
  * ```
@@ -110,13 +110,13 @@ export interface NumberValidator extends PrimitiveValidator<number> {
 
 /**
  * Validador para arrays.
- * Se obtiene a través de `LuneModels.array(itemValidator?)`.
+ * Se obtiene a través de `LuneSchema.array(itemValidator?)`.
  *
  * @template T - Tipo de cada elemento del array.
  *
  * @example
  * ```js
- * const v = LuneModels.array(LuneModels.string().required()).minElements(1);
+ * const v = LuneSchema.array(LuneSchema.string().required()).minElements(1);
  * v.validate(["a", "b"]); // true
  * v.validate([]);          // "Mínimo 1 elemento(s)"
  * ```
@@ -171,13 +171,13 @@ export type ObjectDefinition = Record<
 
 /**
  * Validador para objetos con una estructura definida.
- * Se obtiene a través de `LuneModels.object(definition)`.
+ * Se obtiene a través de `LuneSchema.object(definition)`.
  *
  * @example
  * ```js
- * const v = LuneModels.object({
- *   nombre: LuneModels.string().required(),
- *   edad:   LuneModels.number().min(0),
+ * const v = LuneSchema.object({
+ *   nombre: LuneSchema.string().required(),
+ *   edad:   LuneSchema.number().min(0),
  * });
  * v.validate({ nombre: "Ana", edad: 25 }); // true
  * v.validate({ edad: -1 });                // { nombre: "Campo requerido", edad: "El valor mínimo es 0" }
@@ -229,16 +229,16 @@ export interface SchemaValidationResult<T = Record<string, unknown>> {
 }
 
 /**
- * Schema completo creado con `LuneModels.schema(definition)`.
+ * Schema completo creado con `LuneSchema.schema(definition)`.
  * Valida un objeto entero de una sola vez.
  *
  * @template T - Forma del objeto a validar.
  *
  * @example
  * ```js
- * const schema = LuneModels.schema({
- *   nombre: LuneModels.string().required().maxLength(100),
- *   edad:   LuneModels.number().min(0).max(120),
+ * const schema = LuneSchema.schema({
+ *   nombre: LuneSchema.string().required().maxLength(100),
+ *   edad:   LuneSchema.number().min(0).max(120),
  * });
  *
  * const { valid, errors, value } = schema.validate({ nombre: "Ana", edad: 25 });
@@ -254,22 +254,22 @@ export interface Schema<T = Record<string, unknown>> {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  LUNEMODELS NAMESPACE
+//  LUNESCHEMA NAMESPACE
 // ─────────────────────────────────────────────────────────────────────────────
 
 /**
- * ## LuneModels
+ * ## LuneSchema
  * Librería de validación con encadenamiento fluido de reglas.
  * Compatible con `LuneDataBase` para validar schemas de tablas.
  *
  * @example
  * ```js
- * import LuneModels from './LuneModels.js';
+ * import LuneSchema from './LuneSchema.js';
  *
- * const schema = LuneModels.schema({
- *   username: LuneModels.string().required().minLength(3).maxLength(20),
- *   age:      LuneModels.number().required().min(18),
- *   tags:     LuneModels.array(LuneModels.string()).minElements(1),
+ * const schema = LuneSchema.schema({
+ *   username: LuneSchema.string().required().minLength(3).maxLength(20),
+ *   age:      LuneSchema.number().required().min(18),
+ *   tags:     LuneSchema.array(LuneSchema.string()).minElements(1),
  * });
  *
  * const { valid, errors } = schema.validate({ username: "Lu", age: 15 });
@@ -277,13 +277,13 @@ export interface Schema<T = Record<string, unknown>> {
  * // errors → { username: "Mínimo 3 caracteres", age: "El valor mínimo es 18" }
  * ```
  */
-declare const LuneModels: {
+declare const LuneSchema: {
   /**
    * Crea un validador para valores de tipo `string`.
    *
    * @example
    * ```js
-   * LuneModels.string().required().minLength(2).maxLength(50)
+   * LuneSchema.string().required().minLength(2).maxLength(50)
    * ```
    */
   string(): StringValidator;
@@ -293,7 +293,7 @@ declare const LuneModels: {
    *
    * @example
    * ```js
-   * LuneModels.number().required().min(0).max(999)
+   * LuneSchema.number().required().min(0).max(999)
    * ```
    */
   number(): NumberValidator;
@@ -306,7 +306,7 @@ declare const LuneModels: {
    *
    * @example
    * ```js
-   * LuneModels.array(LuneModels.string().required()).minElements(1)
+   * LuneSchema.array(LuneSchema.string().required()).minElements(1)
    * ```
    */
   array<T = unknown>(
@@ -320,9 +320,9 @@ declare const LuneModels: {
    *
    * @example
    * ```js
-   * LuneModels.object({
-   *   calle:  LuneModels.string().required(),
-   *   numero: LuneModels.number().min(1),
+   * LuneSchema.object({
+   *   calle:  LuneSchema.string().required(),
+   *   numero: LuneSchema.number().min(1),
    * })
    * ```
    */
@@ -336,9 +336,9 @@ declare const LuneModels: {
    *
    * @example
    * ```js
-   * const schema = LuneModels.schema({
-   *   email: LuneModels.string().required(),
-   *   edad:  LuneModels.number().min(18),
+   * const schema = LuneSchema.schema({
+   *   email: LuneSchema.string().required(),
+   *   edad:  LuneSchema.number().min(18),
    * });
    * const { valid, errors } = schema.validate(data);
    * ```
@@ -346,4 +346,4 @@ declare const LuneModels: {
   schema<T = Record<string, unknown>>(definition: SchemaDefinition): Schema<T>;
 };
 
-export default LuneModels;
+export default LuneSchema;

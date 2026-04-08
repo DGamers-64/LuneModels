@@ -192,7 +192,7 @@ function createSchema(definition) {
     }
 }
 
-const LuneModels = {
+const LuneSchema = {
     string() { return createValidator("string") },
     number() { return createValidator("number") },
     array(itemValidator) { return createArrayValidator(itemValidator) },
@@ -200,4 +200,4 @@ const LuneModels = {
     schema(definition) { return createSchema(definition) }
 }
 
-export default LuneModels
+export default LuneSchema
